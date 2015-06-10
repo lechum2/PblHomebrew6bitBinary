@@ -1,0 +1,28 @@
+{
+    "appKeys": {},
+    "capabilities": [
+        ""
+    ],
+    "companyName": "RobOfTheSkyPeople",
+    "longName": "Homebrew Binary 6-bit",
+    "projectType": "native",
+    "resources": {
+        "media": [
+            {
+                "file": "fonts/ShareTechMono-Regular.ttf",
+                "name": "Share_Tech_Mono_44",
+                "type": "font"
+            }
+        ]
+    },
+    "sdkVersion": "3",
+    "shortName": "HB Bin 6-bit",
+    "targetPlatforms": [
+        "basalt"
+    ],
+    "uuid": "041063e2-c135-4d63-9fe2-97c56947f52c",
+    "versionLabel": "1.0",
+    "watchapp": {
+        "watchface": true
+    }
+}
