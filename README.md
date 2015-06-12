@@ -5,3 +5,5 @@ changed it from an 8-bit-per-line display to a 6-bit
 used a different, larger font
 added the old-school green-on-black "homebrew" color scheme
 and removed the date window.
+
+Many thanks to MyNameIsKir for her help and her work.
