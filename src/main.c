@@ -10,7 +10,7 @@
 Window *s_main_window;
 TextLayer *text_layer;
 //The current binary time
-char binary_time[27], binary_hours[9], binary_minutes[9], binary_days[9];
+char binary_time[36], binary_hours[9], binary_minutes[9], binary_days[9], binary_months[9];
 
 //Convert integer into a 8 digit binary number
 void getBin(int num, char *str)
@@ -26,7 +26,8 @@ static void update_time() {
   //Get the time and split it into decimal variables (hour, minute, time)
   time_t temp = time(NULL); 
   struct tm *tick_time = localtime(&temp);
-  int hours = tick_time->tm_hour, minutes = tick_time->tm_min, days = tick_time->tm_mday;
+  int hours = tick_time->tm_hour, minutes = tick_time->tm_min;
+  int days = tick_time->tm_mday, months = tick_time->tm_mon;
 
   //If needed, convert the hours to reflect a 12 hour clock. AM/PM is not displayed
   //  on this watchface at this time
@@ -37,6 +38,7 @@ static void update_time() {
   getBin(hours, binary_hours);
   getBin(minutes, binary_minutes);
   getBin(days, binary_days);
+  getBin(1 + months, binary_months);
   
   //Combine the binary time variables to create the full time string.
   //  strcpy also serves to clear the previous string assigned to binary_time
@@ -46,7 +48,9 @@ static void update_time() {
   strcat(binary_time, binary_minutes);
   strcat(binary_time, "\n");
   strcat(binary_time, binary_days);
-
+  strcat(binary_time, "\n");
+  strcat(binary_time, binary_months);
+  
   //Set the text layer to display the binary time, thereby printing it to the string.
   text_layer_set_text(text_layer, binary_time);
 }
@@ -54,10 +58,9 @@ static void update_time() {
 //Generate the main window
 static void main_window_load(Window *window) {
   //Generate the text layer that will display the binary time
-  text_layer = text_layer_create(GRect(0, 12, 144, 150));
+  text_layer = text_layer_create(GRect(0, -10, 144, 200));
   text_layer_set_background_color(text_layer, GColorBlack);
   text_layer_set_text_color(text_layer, GColorGreen);
-  //text_layer_set_text(text_layer, "000000\n000000\n000000");
   text_layer_set_font(text_layer, fonts_load_custom_font(resource_get_handle(RESOURCE_ID_Share_Tech_Mono_44)));
   text_layer_set_text_alignment(text_layer, GTextAlignmentCenter);
 
@@ -72,16 +75,13 @@ static void main_window_unload(Window *window) {
   text_layer_destroy(text_layer);
 }
 
-//Calls the actions to occur every second
-static void second_tick_handler(struct tm *tick_time, TimeUnits units_changed) {
+//Calls the actions to occur every minute 
+static void minute_tick_handler(struct tm *tick_time, TimeUnits units_changed) {
   update_time();
 }
 
 //Initialize objects and processes
 static void handle_init(void) {
-  //Run the time updater every second
-  tick_timer_service_subscribe(MINUTE_UNIT, second_tick_handler);
-  
   //Generate the main window
   s_main_window = window_create();
   window_set_background_color(s_main_window, GColorBlack);
@@ -90,6 +90,9 @@ static void handle_init(void) {
     .unload = main_window_unload
   });
   window_stack_push(s_main_window, true);
+
+  //Run the time updater every minute 
+  tick_timer_service_subscribe(MINUTE_UNIT, minute_tick_handler);
 }
 
 //Deinitialize everything
