@@ -27,7 +27,7 @@ static void update_time() {
   time_t temp = time(NULL); 
   struct tm *tick_time = localtime(&temp);
   int hours = tick_time->tm_hour, minutes = tick_time->tm_min;
-  int days = tick_time->tm_mday, months = tick_time->tm_mon;
+  int days = tick_time->tm_mday, months = tick_time->tm_mon + 1;
 
   //If needed, convert the hours to reflect a 12 hour clock. AM/PM is not displayed
   //  on this watchface at this time
@@ -38,7 +38,7 @@ static void update_time() {
   getBin(hours, binary_hours);
   getBin(minutes, binary_minutes);
   getBin(days, binary_days);
-  getBin(1 + months, binary_months);
+  getBin(months, binary_months);
   
   //Combine the binary time variables to create the full time string.
   //  strcpy also serves to clear the previous string assigned to binary_time
